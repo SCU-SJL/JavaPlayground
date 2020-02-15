@@ -1,6 +1,5 @@
 package jdbc;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +7,6 @@ import java.sql.SQLException;
 
 public class Run {
     public static void main(String[] args) throws SQLException {
-
         Connection connection = JdbcUtils.getConnection();
         String sql = "SELECT name FROM foo WHERE id = (?)";
         PreparedStatement pst = connection.prepareStatement(sql);
