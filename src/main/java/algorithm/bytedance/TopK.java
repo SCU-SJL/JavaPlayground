@@ -1,5 +1,7 @@
 package algorithm.bytedance;
 
+import org.junit.Test;
+
 import java.util.*;
 
 /**
@@ -24,7 +26,8 @@ public class TopK {
         return res;
     }
 
-    public static void main(String[] args) {
+    @Test
+    public void test() {
         Random random = new Random();
         int[] nums = new int[1000];
         for (int i = 0; i < 1000; i++) {
