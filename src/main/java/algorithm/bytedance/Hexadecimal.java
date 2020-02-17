@@ -51,11 +51,13 @@ public class Hexadecimal {
 
     @Test
     public void test() {
+        long start = System.currentTimeMillis();
         Random random = new Random();
         for (int i = 0; i < 100; i++) {
             String num1 = BaseUtils.toHexadecimal(random.nextInt(100000));
             String num2 = BaseUtils.toHexadecimal(random.nextInt(100000));
             Assert.assertEquals(defaultHexadecimalAddition(num1, num2), hexadecimalAddition(num1, num2));
         }
+        System.out.println("执行用时：" + (System.currentTimeMillis() - start) + "ms");
     }
 }
