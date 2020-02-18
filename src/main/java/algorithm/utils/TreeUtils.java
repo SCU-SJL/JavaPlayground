@@ -19,12 +19,12 @@ public abstract class TreeUtils {
      * @param nodes tree nodes order by level
      * @return root of the tree
      */
-    public static TreeNode getTree(Integer[] nodes) {
+    public static TreeNode buildTreeFromArray(Integer[] nodes) {
         if (nodes == null || nodes.length == 0) {
             throw new IllegalArgumentException("Tree cannot be null or empty");
         }
 
-        TreeNode root = null;
+        TreeNode root;
         TreeNode res = null;
         LinkedList<TreeNode> queue = new LinkedList<>();
         queue.offer(new TreeNode(nodes[0]));

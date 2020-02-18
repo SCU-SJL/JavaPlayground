@@ -13,11 +13,11 @@ import java.util.Random;
  */
 public class Hexadecimal {
     /**
-     * 使用 {@link BaseUtils#toHexadecimal(int)}
-     * 和 {@link BaseUtils#toDecimal(String)} 完成
+     * 使用 {@link BaseUtils#decimalToHexadecimal(int)}
+     * 和 {@link BaseUtils#hexadecimalToDecimal(String)} 完成
      */
     public String defaultHexadecimalAddition(String num1, String num2) {
-        return BaseUtils.toHexadecimal(BaseUtils.toDecimal(num1) + BaseUtils.toDecimal(num2));
+        return BaseUtils.decimalToHexadecimal(BaseUtils.hexadecimalToDecimal(num1) + BaseUtils.hexadecimalToDecimal(num2));
     }
 
     /**
@@ -54,8 +54,8 @@ public class Hexadecimal {
         long start = System.currentTimeMillis();
         Random random = new Random();
         for (int i = 0; i < 100; i++) {
-            String num1 = BaseUtils.toHexadecimal(random.nextInt(100000));
-            String num2 = BaseUtils.toHexadecimal(random.nextInt(100000));
+            String num1 = BaseUtils.decimalToHexadecimal(random.nextInt(100000));
+            String num2 = BaseUtils.decimalToHexadecimal(random.nextInt(100000));
             Assert.assertEquals(defaultHexadecimalAddition(num1, num2), hexadecimalAddition(num1, num2));
         }
         System.out.println("执行用时：" + (System.currentTimeMillis() - start) + "ms");
