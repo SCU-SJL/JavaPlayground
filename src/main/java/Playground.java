@@ -1,24 +1,14 @@
 import com.alibaba.fastjson.JSON;
 import json.support.DefaultJsonParser;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import pojo.Building;
 import pojo.School;
 import pojo.Student;
 
+import java.util.*;
+
 public class Playground {
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    static class Shop {
-        private int id = 1;
-        private Integer num = 1;
-        private Shop[] shops;
-        public Shop(Shop[] shops) {
-            this.shops = shops;
-        }
-    }
     public static void main(String[] args) throws Exception {
         School scu = new School("Sichuan University", new Building[]{
                 new Building("No.1 Teaching Building"),
@@ -33,5 +23,26 @@ public class Playground {
         Student student = new Student("Marvin", "20170123", hobbies, schools);
 
         System.out.println(new DefaultJsonParser().parseToJsonString(student));
+
+        MapClass mapClass = new MapClass();
+        List<School> schoolList = Arrays.asList(scu, bju);
+        mapClass.setList(schoolList);
+
+        System.out.println(JSON.toJSONString(mapClass));
+
+        System.out.println(new DefaultJsonParser().parseToJsonString(mapClass));
+    }
+    @Data
+    @NoArgsConstructor
+    private static class MapClass {
+        private Set<Integer> set = new HashSet<>();
+//        private Map<Integer, String> map = new HashMap<>();
+        private List<School> list;
+        {
+//            map.put(1, "one");
+//            map.put(2, "two");
+            set.add(3);
+            set.add(4);
+        }
     }
 }

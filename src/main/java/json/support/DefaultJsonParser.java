@@ -5,39 +5,39 @@ import json.JsonParser;
 import json.exception.JsonParseException;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The default implementation of {@link JsonParser}
+ *
  * @author ShaoJiale
  * Date: 2020/2/20
  */
 public class DefaultJsonParser implements JsonParser {
 
-    public final static Set<Class<?>> COMMON_TYPE;
+    public final static Set<Class<?>> REGULAR_TYPE;
     public final static Set<Class<?>> ARRAY_TYPE;
 
     static {
-        COMMON_TYPE = new HashSet<>();
+        REGULAR_TYPE = new HashSet<>();
         ARRAY_TYPE = new HashSet<>();
-        COMMON_TYPE.add(byte.class);
-        COMMON_TYPE.add(boolean.class);
-        COMMON_TYPE.add(short.class);
-        COMMON_TYPE.add(char.class);
-        COMMON_TYPE.add(int.class);
-        COMMON_TYPE.add(float.class);
-        COMMON_TYPE.add(long.class);
-        COMMON_TYPE.add(double.class);
-        COMMON_TYPE.add(Byte.class);
-        COMMON_TYPE.add(Boolean.class);
-        COMMON_TYPE.add(Short.class);
-        COMMON_TYPE.add(Character.class);
-        COMMON_TYPE.add(Integer.class);
-        COMMON_TYPE.add(Float.class);
-        COMMON_TYPE.add(Long.class);
-        COMMON_TYPE.add(Double.class);
-        COMMON_TYPE.add(String.class);
+        REGULAR_TYPE.add(byte.class);
+        REGULAR_TYPE.add(boolean.class);
+        REGULAR_TYPE.add(short.class);
+        REGULAR_TYPE.add(char.class);
+        REGULAR_TYPE.add(int.class);
+        REGULAR_TYPE.add(float.class);
+        REGULAR_TYPE.add(long.class);
+        REGULAR_TYPE.add(double.class);
+        REGULAR_TYPE.add(Byte.class);
+        REGULAR_TYPE.add(Boolean.class);
+        REGULAR_TYPE.add(Short.class);
+        REGULAR_TYPE.add(Character.class);
+        REGULAR_TYPE.add(Integer.class);
+        REGULAR_TYPE.add(Float.class);
+        REGULAR_TYPE.add(Long.class);
+        REGULAR_TYPE.add(Double.class);
+        REGULAR_TYPE.add(String.class);
         ARRAY_TYPE.add(byte[].class);
         ARRAY_TYPE.add(boolean[].class);
         ARRAY_TYPE.add(short[].class);
@@ -62,7 +62,7 @@ public class DefaultJsonParser implements JsonParser {
             Field field = fields[i];
             field.setAccessible(true);
 
-            String name = field.getName();
+            String key = field.getName();
             Class<?> fieldClass = field.getType();
             Object value;
 
@@ -73,7 +73,7 @@ public class DefaultJsonParser implements JsonParser {
             }
 
             result.append("\"")
-                    .append(name)
+                    .append(key)
                     .append("\":");
 
             if (value == null) {
@@ -84,47 +84,7 @@ public class DefaultJsonParser implements JsonParser {
                 continue;
             }
 
-            if (COMMON_TYPE.contains(fieldClass)) {
-                if (fieldClass.equals(String.class)) {
-                    result.append("\"")
-                            .append(value)
-                            .append("\"");
-                } else {
-                    result.append(value);
-                }
-            } else if (fieldClass.isArray()) {  // if the current field is a array
-                result.append("[");
-                Object[] array = (Object[])value;
-                if (ARRAY_TYPE.contains(fieldClass)) {
-                    if (String[].class.equals(fieldClass)) { // if it's a String array
-                        for (int j = 0; j < array.length; j++) {
-                            result.append("\"")
-                                    .append(array[j])
-                                    .append("\"");
-                            if (j < array.length - 1) {
-                                result.append(",");
-                            }
-                        }
-                    } else {    // if it's a basic array
-                        for (int j = 0; j < array.length; j++) {
-                            result.append(array[j]);
-                            if (j < array.length - 1) {
-                                result.append(",");
-                            }
-                        }
-                    }
-                } else {    // if it's an array of beans
-                    for (int j = 0; j < array.length; j++) {
-                        result.append(parseToJsonString(array[j]));
-                        if (j < array.length - 1) {
-                            result.append(",");
-                        }
-                    }
-                }
-                result.append("]");
-            } else {
-                result.append(parseToJsonString(value));
-            }
+            parseValueToJsonString(result, fieldClass, value);
 
             if (i < fields.length - 1) {
                 result.append(",");
@@ -137,11 +97,100 @@ public class DefaultJsonParser implements JsonParser {
 
     @Override
     public Object parseToObject(String jsonStr, Class<?> targetClass) {
+
         return null;
     }
 
     @Override
     public JsonObject<?> parseToJsonObject(Object bean) {
         return new JsonObject<>(bean);
+    }
+
+    /**
+     * Parse value corresponding to the specific key into JSONString.
+     *
+     * @param result     the final JSONString
+     * @param fieldClass {@link Class} of the value
+     * @param value      the value itself
+     * @throws JsonParseException this method will callback {@link DefaultJsonParser#parseToJsonString(Object)} when it meets a bean
+     */
+    private void parseValueToJsonString(StringBuilder result, Class<?> fieldClass, Object value) throws JsonParseException {
+        if (REGULAR_TYPE.contains(fieldClass)) { // if the current field is regular
+            if (fieldClass.equals(String.class)) {
+                result.append("\"")
+                        .append(value)
+                        .append("\"");
+            } else {
+                result.append(value);
+            }
+        } else if (fieldClass.isArray()) {  // if the current field is an array
+            result.append("[");
+            Object[] array = (Object[]) value;
+            if (ARRAY_TYPE.contains(fieldClass)) {
+                if (String[].class.equals(fieldClass)) {
+                    for (int j = 0; j < array.length; j++) {
+                        result.append("\"")
+                                .append(array[j])
+                                .append("\"");
+                        if (j < array.length - 1) {
+                            result.append(",");
+                        }
+                    }
+                } else {
+                    for (int j = 0; j < array.length; j++) {
+                        result.append(array[j]);
+                        if (j < array.length - 1) {
+                            result.append(",");
+                        }
+                    }
+                }
+            } else {    // if it's an array of beans
+                for (int j = 0; j < array.length; j++) {
+                    result.append(parseToJsonString(array[j]));
+                    if (j < array.length - 1) {
+                        result.append(",");
+                    }
+                }
+            }
+            result.append("]");
+        } else if (List.class.isAssignableFrom(fieldClass)) {
+            result.append("[");
+            List<?> list = (List<?>) value;
+            Iterator<?> iterator = list.iterator();
+            parseListOrSetFieldToJsonString(result, iterator, list.size());
+            result.append("]");
+        } else if (Map.class.isAssignableFrom(fieldClass)) {
+            // TODO resolve Map
+        } else if (Set.class.isAssignableFrom(fieldClass)) {
+            result.append("[");
+            Set<?> set = (Set<?>) value;
+            Iterator<?> iterator = set.iterator();
+            parseListOrSetFieldToJsonString(result, iterator, set.size());
+            result.append("]");
+        } else {    // if the current field is a bean
+            result.append(parseToJsonString(value));
+        }
+    }
+
+    /**
+     * Parse {@link Field} of {@link List} or {@link Set} into JSONString
+     *
+     * @param result   the final JSONString
+     * @param iterator {@link Iterator} of a List or a Set
+     * @param size     size of a List or Set
+     * @throws JsonParseException for each of the elements in the List or Set, we have to callback
+     *                            {@link DefaultJsonParser#parseValueToJsonString(StringBuilder, Class, Object)}
+     *                            because we are not sure about the type of the elements. In this way, we can
+     *                            resolve {@link Field} like "List<List<Integer>>"
+     */
+    private void parseListOrSetFieldToJsonString(StringBuilder result, Iterator<?> iterator, int size) throws JsonParseException {
+        int i = 0;
+        while (iterator.hasNext()) {
+            Object elem = iterator.next();
+            parseValueToJsonString(result, elem.getClass(), elem);
+            if (i++ < size - 1) {
+                result.append(",");
+            }
+        }
     }
 }
