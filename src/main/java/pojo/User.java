@@ -14,8 +14,8 @@ public class User {
     private int age;
 
     private User(Builder builder) {
-        this.id = builder.id.getAndIncrement();
-        this.name = (builder.name == null ? "Undefined" : builder.name);
+        this.id = Builder.id.getAndIncrement();
+        this.name = builder.name;
         this.age = builder.age;
     }
 

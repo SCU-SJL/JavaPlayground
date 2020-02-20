@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * The default implementation of {@link JsonParser}
  * @author ShaoJiale
  * Date: 2020/2/20
  */
@@ -45,7 +46,7 @@ public class DefaultJsonParser implements JsonParser {
         ARRAY_TYPE.add(float[].class);
         ARRAY_TYPE.add(long[].class);
         ARRAY_TYPE.add(double[].class);
-        ARRAY_TYPE.add(Object[].class);
+        ARRAY_TYPE.add(String[].class);
     }
 
     @Override
@@ -75,6 +76,14 @@ public class DefaultJsonParser implements JsonParser {
                     .append(name)
                     .append("\":");
 
+            if (value == null) {
+                result.append("null");
+                if (i < fields.length - 1) {
+                    result.append(",");
+                }
+                continue;
+            }
+
             if (COMMON_TYPE.contains(fieldClass)) {
                 if (fieldClass.equals(String.class)) {
                     result.append("\"")
@@ -83,8 +92,36 @@ public class DefaultJsonParser implements JsonParser {
                 } else {
                     result.append(value);
                 }
-            } else if (ARRAY_TYPE.contains(fieldClass)) {
-                // TODO resolve array fields
+            } else if (fieldClass.isArray()) {  // if the current field is a array
+                result.append("[");
+                Object[] array = (Object[])value;
+                if (ARRAY_TYPE.contains(fieldClass)) {
+                    if (String[].class.equals(fieldClass)) { // if it's a String array
+                        for (int j = 0; j < array.length; j++) {
+                            result.append("\"")
+                                    .append(array[j])
+                                    .append("\"");
+                            if (j < array.length - 1) {
+                                result.append(",");
+                            }
+                        }
+                    } else {    // if it's a basic array
+                        for (int j = 0; j < array.length; j++) {
+                            result.append(array[j]);
+                            if (j < array.length - 1) {
+                                result.append(",");
+                            }
+                        }
+                    }
+                } else {    // if it's an array of beans
+                    for (int j = 0; j < array.length; j++) {
+                        result.append(parseToJsonString(array[j]));
+                        if (j < array.length - 1) {
+                            result.append(",");
+                        }
+                    }
+                }
+                result.append("]");
             } else {
                 result.append(parseToJsonString(value));
             }
