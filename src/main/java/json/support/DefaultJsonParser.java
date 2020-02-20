@@ -19,7 +19,7 @@ public class DefaultJsonParser implements JsonParser {
 
     static {
         COMMON_TYPE = new HashSet<>();
-        ARRAY_TYPE  = new HashSet<>();
+        ARRAY_TYPE = new HashSet<>();
         COMMON_TYPE.add(byte.class);
         COMMON_TYPE.add(boolean.class);
         COMMON_TYPE.add(short.class);
@@ -68,7 +68,7 @@ public class DefaultJsonParser implements JsonParser {
             try {
                 value = field.get(bean);
             } catch (IllegalAccessException ex) {
-                throw new JsonParseException("Cannot access this field: [" + field +"]", ex);
+                throw new JsonParseException("Cannot access this field: [" + field + "]", ex);
             }
 
             result.append("\"")
