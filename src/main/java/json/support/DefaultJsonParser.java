@@ -97,7 +97,6 @@ public class DefaultJsonParser implements JsonParser {
 
     @Override
     public Object parseToObject(String jsonStr, Class<?> targetClass) {
-
         return null;
     }
 
@@ -160,7 +159,6 @@ public class DefaultJsonParser implements JsonParser {
             parseListOrSetFieldToJsonString(result, iterator, list.size());
             result.append("]");
         } else if (Map.class.isAssignableFrom(fieldClass)) {
-            // TODO resolve Map
             result.append("{");
             Map<?, ?> map = (Map<?, ?>) value;
             int i = 0;
