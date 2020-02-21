@@ -7,6 +7,7 @@ import org.junit.Test;
  * 1. 三个同样的字母连在一起，一定是拼写错误，去掉一个的就好啦：比如 helllo -> hello
  * 2. 两对一样的字母（ AABB 型）连在一起，一定是拼写错误，去掉第二对的一个字母就好啦：比如 helloo -> hello
  * 3. 上面的规则优先“从左到右”匹配，即如果是 AABBCC，虽然 AABB 和 BBCC 都是错误拼写，应该优先考虑修复 AABB，结果为 AABCC
+ *
  * @author ShaoJiale
  * Date: 2020/2/18
  */

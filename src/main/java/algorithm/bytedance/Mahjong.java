@@ -6,9 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 总共有 36 张牌，每张牌是 1 ~ 9。每个数字 4 张牌。
@@ -97,6 +95,7 @@ public class Mahjong {
     }
 
     private long startTime;
+
     @Before
     public void setStartTime() {
         startTime = System.currentTimeMillis();
@@ -109,6 +108,7 @@ public class Mahjong {
 
     @Test
     public void test() {
+        // 已通过牛客网所有测试用例
         {
             List<Integer> list = solve(new int[]{1, 1, 1, 1, 2, 2, 3, 3, 5, 6, 7, 8, 9});
             Integer[] ans = list.toArray(new Integer[0]);

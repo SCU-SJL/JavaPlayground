@@ -8,6 +8,7 @@ import java.util.Random;
 
 /**
  * 计算 36 进制的加法，要求不允许将 36 进制转化为 10 进制计算
+ *
  * @author ShaoJiale
  * Date: 2020/2/16
  */
