@@ -161,6 +161,20 @@ public class DefaultJsonParser implements JsonParser {
             result.append("]");
         } else if (Map.class.isAssignableFrom(fieldClass)) {
             // TODO resolve Map
+            result.append("{");
+            Map<?, ?> map = (Map<?, ?>) value;
+            int i = 0;
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                Object mapKey = entry.getKey();
+                Object mapValue = entry.getValue();
+                parseValueToJsonString(result, mapKey.getClass(), mapKey);
+                result.append(":");
+                parseValueToJsonString(result, mapValue.getClass(), mapValue);
+                if (i++ < map.size() - 1) {
+                    result.append(",");
+                }
+            }
+            result.append("}");
         } else if (Set.class.isAssignableFrom(fieldClass)) {
             result.append("[");
             Set<?> set = (Set<?>) value;
