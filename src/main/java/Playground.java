@@ -1,5 +1,10 @@
 import com.alibaba.fastjson.JSON;
+import json.JsonArray;
+import json.JsonObject;
 import json.support.DefaultJsonParser;
+import json.token.TokenList;
+import json.token.Tokenizer;
+import json.util.CharReader;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pojo.Building;
@@ -24,17 +29,28 @@ public class Playground {
 
 //        System.out.println(new DefaultJsonParser().parseToJsonString(student));
 
-        MapClass mapClass = new MapClass();
-        List<School> schoolList = Arrays.asList(scu, bju);
+//        MapClass mapClass = new MapClass();
+//        List<School> schoolList = Arrays.asList(scu, bju);
 //        mapClass.setList(schoolList);
 
-        System.out.println(JSON.toJSONString(mapClass));
+//        System.out.println(JSON.toJSONString(mapClass));
 
-        System.out.println(new DefaultJsonParser().parseToJsonString(mapClass));
+        String json = new DefaultJsonParser().parseToJsonString(student);
+        System.out.println(json);
+        System.out.println();
+
+        JsonObject<String, Object> jsonObject = new DefaultJsonParser().parseToJsonObject(json);
+        for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+            System.out.print(entry.getKey() + ":");
+            System.out.println(entry.getValue());
+        }
+
     }
     @Data
     @NoArgsConstructor
     private static class MapClass {
+        String name = null;
+        Boolean flag = false;
         private Set<Integer> set = new HashSet<>();
         private Map<Integer, String> map = new HashMap<>();
 //        private List<School> list;
