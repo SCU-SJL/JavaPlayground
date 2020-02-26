@@ -62,7 +62,7 @@ public class Traversal {
     }
 
     public static void main(String[] args) {
-        Integer[] arr = {1,2,4,null,3,null,6};
+        Integer[] arr = {1, null, 3, null, null, 4, 5};
         TreeNode root = TreeUtils.buildTreeFromArray(arr);
         preOrder(root);
         System.out.println();

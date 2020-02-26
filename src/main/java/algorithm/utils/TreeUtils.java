@@ -39,8 +39,10 @@ public abstract class TreeUtils {
                 Integer rightVal = nodes[index++];
                 TreeNode leftNode =  leftVal == null ? null : new TreeNode(leftVal);
                 TreeNode rightNode = rightVal == null ? null : new TreeNode(rightVal);
-                root.left = leftNode;
-                root.right = rightNode;
+                if (root != null) {
+                    root.left = leftNode;
+                    root.right = rightNode;
+                }
                 queue.offer(leftNode);
                 queue.offer(rightNode);
             }
