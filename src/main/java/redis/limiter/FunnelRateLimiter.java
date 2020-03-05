@@ -27,6 +27,7 @@ public class FunnelRateLimiter {
         }
 
         private void makeSpace() {
+            // calculate new free space
             long curTs = System.currentTimeMillis();
             long deltaTs = curTs - leakingTs;
             int deltaQuota = (int) (deltaTs * leakingRate);
